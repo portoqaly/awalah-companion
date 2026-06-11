@@ -136,18 +136,52 @@ body.m2{--bg:#FBF3DC;--accent:var(--gold)}
   border-radius:6px;padding:1px 5px;letter-spacing:.03em}
 .lcard.owned{background:linear-gradient(180deg,var(--stock),#fff);box-shadow:inset 0 0 0 1.5px var(--oc)}
 
-/* cards / events */
-.evgroup{margin-bottom:16px}
-.evgroup>h3{font-size:12px;font-weight:900;color:var(--muted);letter-spacing:.04em;margin:0 3px 8px;direction:rtl;text-align:right}
-.evgrid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
-.evbtn{background:var(--stock);border:1px solid var(--line2);border-radius:13px;padding:11px 11px;text-align:right;
-  display:flex;flex-direction:column;gap:3px;direction:rtl;min-height:84px;justify-content:center}
-.evbtn:active{transform:scale(.97);background:#fff}
-.evbtn .evname{font-family:'ThmanyahSS01','Thmanyah',sans-serif;font-weight:900;font-size:17px;line-height:1.05}
-.evbtn .evdesc{font-size:10.5px;color:var(--muted);font-weight:600;line-height:1.3;direction:rtl}
-.evbtn.king{border-color:var(--gold)}.evbtn.king .evname{color:var(--gold)}
-.evbtn.queen{border-color:var(--slate)}.evbtn.queen .evname{color:var(--slate)}
-.evbtn.jack .evname{color:var(--red)}
+/* ===== the deck (drawer) — Najdi card stock, from cards.html ===== */
+.deckwrap{display:flex;flex-direction:column;align-items:center;gap:13px;padding-top:4px}
+.cardview{width:208px;max-width:64vw;perspective:1000px;cursor:pointer}
+.cardview .card{animation:flipin .3s ease}
+@keyframes flipin{from{transform:rotateY(-80deg);opacity:.25}to{transform:rotateY(0);opacity:1}}
+.drawmsg{text-align:center;min-height:28px}
+.drawmsg .mv{display:block;font-weight:900;font-size:22px;color:var(--ink);line-height:1.1}
+.drawmsg .msg{font-size:13px;font-weight:700;color:var(--soft);direction:rtl}
+.drawmsg.muted{color:var(--muted);font-weight:600;font-size:13px;max-width:300px;line-height:1.5}
+.drawctl{display:flex;gap:8px;width:100%}
+.drawctl.col{flex-direction:column;align-items:stretch}
+.drawctl .ctl-q{font-size:12.5px;font-weight:800;color:var(--soft);text-align:center;direction:rtl}
+.drawctl .pickrow{justify-content:center}
+.drawctl>button{flex:1}
+.deckcount{font-size:11.5px;font-weight:700;color:var(--muted);text-align:center;direction:rtl;font-variant-numeric:tabular-nums}
+.deckcount b{color:var(--soft)}
+
+.card{position:relative;width:100%;aspect-ratio:5/7;background:#FFFDF2;border:1.5px solid var(--ink);
+  border-radius:12px;box-shadow:0 2px 9px rgba(25,20,9,.14);padding:7px;--suit:var(--red)}
+.card .fr{position:relative;height:100%;border:1px solid var(--line2);border-radius:6px;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;padding:30px 12px;text-align:center;color:var(--suit)}
+.tband{position:absolute;left:9px;right:9px;height:8px;background:currentColor;
+  -webkit-mask:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 8'><path d='M0 8L8 0L16 8Z'/></svg>") 50% 0/16px 100% repeat-x;
+          mask:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 8'><path d='M0 8L8 0L16 8Z'/></svg>") 50% 0/16px 100% repeat-x}
+.tband.t{top:9px;transform:scaleY(-1)}
+.tband.b{bottom:9px}
+.ix{position:absolute;top:17px;left:14px;line-height:1;color:var(--suit);font-family:'ThmanyahSS01','Thmanyah',sans-serif;font-weight:900;font-size:19px}
+.ix.flip{top:auto;left:auto;bottom:17px;right:14px;transform:rotate(180deg)}
+.orn{display:flex;gap:8px;align-items:center;justify-content:center;color:var(--suit)}
+.orn i{width:6px;height:6px;transform:rotate(45deg);border:1.5px solid currentColor}
+.orn i.f{background:currentColor;width:7px;height:7px;border:none}
+.orn b{width:19px;height:19px;transform:rotate(45deg);border:1.5px solid currentColor;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.orn b span{transform:rotate(-45deg);font-weight:900;font-size:10.5px;line-height:1}
+.orn.mid{margin-top:14px}
+.card .pip{font-family:'ThmanyahSS01','Thmanyah',sans-serif;font-weight:900;font-size:102px;line-height:1;color:var(--suit);margin:10px 0 14px}
+.card .word{font-family:'ThmanyahSS01','Thmanyah',sans-serif;font-weight:900;font-size:40px;line-height:1.2;direction:rtl;color:var(--suit)}
+.card .word .yk{display:block;font-weight:400;font-size:16px;line-height:1;opacity:.55;margin-bottom:2px}
+.card .fx{font-size:10.5px;line-height:1.6;color:var(--soft);margin-top:13px;direction:rtl}
+.card .fx b{color:var(--ink);white-space:nowrap;direction:ltr;unicode-bidi:isolate;font-weight:900}
+.kcard{--suit:var(--gold)}.qcard{--suit:var(--slate)}.jcard{--suit:#177A42}
+.gup{color:var(--gold);font-weight:900}.gdn{color:var(--slate);font-weight:900}
+.card.back{background:var(--red);border-color:#70090E}
+.back .fr{border-color:rgba(250,245,230,.55);color:var(--paper)}
+.back .fr::after{content:"";position:absolute;inset:3px;border:1px solid rgba(250,245,230,.3);border-radius:4px;pointer-events:none}
+.back .orn{color:var(--paper)}
+.back .bwm{font-family:'ThmanyahSS01','Thmanyah',sans-serif;font-weight:900;font-size:42px;color:var(--paper);direction:rtl;margin:16px 0}
 
 /* harvest */
 .hv-row{background:var(--stock);border:1px solid var(--line2);border-radius:13px;padding:11px 13px;margin-bottom:9px;
@@ -353,7 +387,7 @@ let draft = null;
 let showDetail = false;   // land-sheet pricing detail toggle
 
 function freshState(){
-  return { started:false, market:1, round:1, players:[], deeds:{}, log:[] };
+  return { started:false, market:1, round:1, players:[], deeds:{}, log:[], deck:[], discard:[], current:null };
 }
 function load(){ try{return JSON.parse(localStorage.getItem(KEY));}catch(e){return null;} }
 function save(){ try{localStorage.setItem(KEY,JSON.stringify(state));}catch(e){} }
@@ -391,6 +425,7 @@ function render(){
   const tm=document.querySelector('meta[name=theme-color]'); if(tm)tm.content=tc;
   const app=$('#app');
   if(!state.started){ app.innerHTML=setupView(); wireSetup(); return; }
+  if(!Array.isArray(state.deck)){ initDeck(); save(); }
   app.innerHTML = topbar() + `<div class="content" id="content">${
       tab==='players'?playersTab(): tab==='lands'?landsTab(): tab==='cards'?cardsTab(): tab==='harvest'?harvestTab(): rulesTab()
     }</div>` + nav();
@@ -478,29 +513,49 @@ function landsTab(){
 }
 
 /* ---------- CARDS ---------- */
-const JACKS=[
-  {id:'hunger', n:'سنة الجوع', d:'كل لاعب يدفع 20 لكل عقار'},
-  {id:'locust', n:'سنة الجراد', d:'كل لاعب يدفع 6 لكل مزرعة'},
-  {id:'flood',  n:'سنة السيل', d:'كل لاعب يدفع 15 لكل متجر'},
-  {id:'plenty', n:'سنة الخير', d:'كل لاعب يجمع 18'},
-  {id:'rumor',  n:'إشاعة', d:'طفرة +6 · كساد −6 · عادي لا شيء'},
-  {id:'spec',   n:'مضاربة', d:'الساحب يحرّك السوق درجة'},
-  {id:'gift',   n:'عيدية', d:'كل لاعب آخر يعطي الساحب 10'},
-  {id:'sadaqah',n:'صدقة', d:'ادفع 10 اختياريًا → بركة (حصاد عادي وقت الكساد)'},
-];
+const RY='<span class="riyal"></span>';
+const JACK={
+  hunger:{w:'الجوع',yk:'سنة',fx:`الكل: <b>−${RY}20k</b> لكل عقار`},
+  locust:{w:'الجراد',yk:'سنة',fx:`الكل: <b>−${RY}6k</b> لكل مزرعة`},
+  flood:{w:'السيل',yk:'سنة',fx:`الكل: <b>−${RY}15k</b> لكل متجر`},
+  plenty:{w:'الخير',yk:'سنة',fx:`الكل <b>+${RY}18k</b>`},
+  sadaqah:{w:'صدقة',yk:'',fx:`تبرّع <b>${RY}10k</b> ← بركة`},
+  rumor:{w:'إشاعة',yk:'',fx:`<span class="gup">▲</span> الكل <b>+${RY}6k</b> · <span class="gdn">▼</span> الكل <b>−${RY}6k</b>`},
+  spec:{w:'مضاربة',yk:'',fx:`حرّك السوق خطوة — تختار الاتجاه`},
+  gift:{w:'عيدية',yk:'',fx:`كل لاعب يعطيك <b>${RY}10k</b>`},
+};
 function cardsTab(){
-  let html=`<div class="sechead"><h2>البطاقات</h2><span class="hint">اضغط لتطبيق الأثر</span></div>`;
-  html+=`<div class="evgroup"><h3>السوق</h3><div class="evgrid">
-    <button class="evbtn king" data-ev="king"><span class="evname ar">👑 ملك</span>
-      <span class="evdesc ar">السوق درجة نحو ☀️ طفرة · إن كانت طفرة: +6 للجميع</span></button>
-    <button class="evbtn queen" data-ev="queen"><span class="evname ar">👸 ملكة</span>
-      <span class="evdesc ar">السوق درجة نحو 🌙 كساد · إن كان كساد: −6 للجميع</span></button>
-  </div></div>`;
-  html+=`<div class="evgroup"><h3>شختك بختك — السنوات</h3><div class="evgrid">`;
-  JACKS.forEach(j=>{ html+=`<button class="evbtn jack" data-ev="${j.id}">
-    <span class="evname ar">${j.n}</span><span class="evdesc ar">${j.d}</span></button>`; });
-  html+=`</div></div>`;
-  return html;
+  const c=state.current, pending=c&&c.t==='jack'&&!c.r, cnt=f=>state.deck.filter(f).length;
+  let h=`<div class="sechead"><h2>الكوت</h2><span class="hint">اسحب — يحرّكك ويقلب السوق</span></div>
+    <div class="deckwrap"><div class="cardview" id="cardview">${renderCard(c)}</div>`;
+  if(c){ h+=`<div class="drawmsg"><b class="mv">تحرّك ${c.t==='num'?c.v:3}</b><span class="msg ar">${c.msg||''}</span></div>`; }
+  else { h+=`<div class="drawmsg muted ar">اضغط الكوت لتسحب بطاقة — تحرّكك على اللوحة وتقلب السوق.</div>`; }
+  if(pending){
+    if(c.j==='spec') h+=`<div class="drawctl"><button class="abtn s" data-spec="up" ${state.market===2?'disabled':''}>نحو ☀️ طفرة</button><button class="abtn s" data-spec="down" ${state.market===0?'disabled':''}>نحو 🌙 كساد</button></div>`;
+    else if(c.j==='gift') h+=`<div class="drawctl col"><div class="ctl-q ar">من سحب البطاقة؟ يأخذ 10 من كل لاعب آخر</div><div class="pickrow">${pickRowsHTML(state.players,'gift',false)}</div></div>`;
+    else if(c.j==='sadaqah') h+=`<div class="drawctl col"><div class="ctl-q ar">من يتصدّق بـ 10؟ (يأخذ بركة)</div><div class="pickrow">${pickRowsHTML(state.players,'sad',false)}</div><button class="ghostbtn" id="sadSkip">تخطّي (لا أحد)</button></div>`;
+  }
+  h+=`<button class="bigbtn" id="drawBtn" ${pending?'disabled':''}>${state.deck.length?'🃏 اسحب التالية':'🔀 اخلط واسحب'}</button>
+    <div class="deckcount ar">في الكوت <b>${state.deck.length}</b>/62 — 👑 ${cnt(x=>x.t==='king')} · 👸 ${cnt(x=>x.t==='queen')} · 🃏 ${cnt(x=>x.t==='jack')} · أرقام ${cnt(x=>x.t==='num')}</div>
+    </div>`;
+  return h;
+}
+function renderCard(c){
+  if(!c) return `<div class="card back"><div class="fr"><span class="tband t"></span><span class="tband b"></span>
+    <div class="orn"><i></i><i class="f"></i><i></i></div><div class="bwm ar">اولاه</div><div class="orn"><i></i><i class="f"></i><i></i></div></div></div>`;
+  if(c.t==='num') return `<div class="card"><div class="fr"><span class="tband t"></span><span class="tband b"></span>
+    <span class="ix">${c.v}</span><span class="ix flip">${c.v}</span>
+    <div class="orn"><i></i><i class="f"></i><i></i></div><div class="pip">${c.v}</div><div class="orn"><i></i><i class="f"></i><i></i></div></div></div>`;
+  if(c.t==='king') return faceCard('kcard','ط','طفرة','',`<span class="gup">▲</span> عند الطفرة: الكل <b>+${RY}6k</b>`);
+  if(c.t==='queen') return faceCard('qcard','ك','كساد','',`<span class="gdn">▼</span> عند الكساد: الكل <b>−${RY}6k</b>`);
+  const j=JACK[c.j]; return faceCard('jcard','ش',j.w,j.yk,j.fx);
+}
+function faceCard(cls,ix,word,yk,fx){
+  return `<div class="card ${cls}"><div class="fr"><span class="tband t"></span><span class="tband b"></span>
+    <span class="ix">${ix}</span><span class="ix flip">${ix}</span>
+    <div class="word">${yk?`<span class="yk">${yk}</span>`:''}${word}</div>
+    <div class="orn mid"><i></i><b><span>3</span></b><i></i></div>
+    <div class="fx ar">${fx}</div></div></div>`;
 }
 
 /* ---------- HARVEST ---------- */
@@ -616,7 +671,7 @@ function rerenderSetup(){ const a=document.activeElement, di=a&&a.dataset?a.data
 function pid(idx){ return 'p'+idx+'_'+Math.floor(performance.now()).toString(36); }
 function startGame(){
   state.players = draft.map((d,idx)=>({id:pid(idx), name:(d.name.trim()||'لاعب '+(idx+1)), hex:d.hex, cash:200, gold:0, blessing:0}));
-  state.started=true; history=[]; logit('بدأت اللعبة — '+state.players.length+' لاعبين'); save(); render();
+  state.started=true; history=[]; initDeck(); logit('بدأت اللعبة — '+state.players.length+' لاعبين'); save(); render();
 }
 
 /* ============================ WIRING ============================ */
@@ -630,49 +685,61 @@ function wireMain(){
     document.querySelectorAll('[data-land]').forEach(c=>c.addEventListener('click',()=>openLand(+c.dataset.land)));
     document.querySelectorAll('[data-pay]').forEach(btn=>btn.addEventListener('click',e=>{e.stopPropagation();openPayRent(+btn.dataset.pay);}));
   }
-  if(tab==='cards') document.querySelectorAll('[data-ev]').forEach(b=>b.addEventListener('click',()=>applyEvent(b.dataset.ev)));
+  if(tab==='cards'){
+    const c=state.current, pending=c&&c.t==='jack'&&!c.r;
+    const db=$('#drawBtn'); if(db&&!pending)db.addEventListener('click',drawCard);
+    const cv=$('#cardview'); if(cv&&!pending)cv.addEventListener('click',drawCard);
+    document.querySelectorAll('[data-spec]').forEach(b=>b.addEventListener('click',()=>resolveSpec(b.dataset.spec)));
+    document.querySelectorAll('[data-gift]').forEach(b=>b.addEventListener('click',()=>resolveGift(b.dataset.gift)));
+    document.querySelectorAll('[data-sad]').forEach(b=>b.addEventListener('click',()=>resolveSadaqah(b.dataset.sad)));
+    const ss=$('#sadSkip'); if(ss)ss.addEventListener('click',()=>resolveSadaqah(null));
+  }
   if(tab==='harvest') $('#harvestApply').addEventListener('click',applyHarvest);
 }
 function setMarket(m){ if(m===state.market)return; snap(); state.market=m; commit('السوق → '+M_AR[m]); toast('السوق: '+M_AR[m]); }
 
 /* ============================ EVENTS ============================ */
 function allCash(d){ state.players.forEach(p=>p.cash+=d); }
-function applyEvent(ev){
-  if(ev==='king'){ snap();
-    if(state.market===2){ allCash(6); commit('👑 ملك في الطفرة: +6 للجميع'); toast('+6 للجميع'); }
-    else { state.market++; commit('👑 ملك: السوق → '+M_AR[state.market]); toast('السوق ↑ '+M_AR[state.market]); }
-    return; }
-  if(ev==='queen'){ snap();
-    if(state.market===0){ allCash(-6); commit('👸 ملكة في الكساد: −6 للجميع'); toast('−6 للجميع'); }
-    else { state.market--; commit('👸 ملكة: السوق → '+M_AR[state.market]); toast('السوق ↓ '+M_AR[state.market]); }
-    return; }
-  if(ev==='hunger'){ snap(); state.players.forEach(p=>p.cash-=20*countType(p.id,'house')); commit('🃏 سنة الجوع: −20/عقار'); toast('الجوع طُبّق'); return; }
-  if(ev==='locust'){ snap(); state.players.forEach(p=>p.cash-=6*countType(p.id,'farm')); commit('🃏 سنة الجراد: −6/مزرعة'); toast('الجراد طُبّق'); return; }
-  if(ev==='flood'){ snap(); state.players.forEach(p=>p.cash-=15*countType(p.id,'souk')); commit('🃏 سنة السيل: −15/متجر'); toast('السيل طُبّق'); return; }
-  if(ev==='plenty'){ snap(); allCash(18); commit('🃏 سنة الخير: +18 للجميع'); toast('+18 للجميع'); return; }
-  if(ev==='rumor'){ snap();
-    if(state.market===2){ allCash(6); commit('🃏 إشاعة (طفرة): +6'); toast('+6 للجميع'); }
-    else if(state.market===0){ allCash(-6); commit('🃏 إشاعة (كساد): −6'); toast('−6 للجميع'); }
-    else { commit('🃏 إشاعة في العادي: لا شيء'); toast('لا أثر (عادي)'); }
-    return; }
-  if(ev==='spec') return openSpec();
-  if(ev==='gift') return openPick({title:'🃏 عيدية', sub:'من سحب البطاقة؟ كل لاعب آخر يعطيه 10', players:state.players, onPick:gid=>{
-    snap(); const others=state.players.filter(p=>p.id!==gid); others.forEach(p=>p.cash-=10); pById(gid).cash+=10*others.length;
-    commit('🃏 عيدية: +'+k(10*others.length)+' لـ '+pById(gid).name); closeSheet(); toast('عيدية طُبّقت'); }});
-  if(ev==='sadaqah') return openPick({title:'🃏 صدقة', sub:'من يتصدّق بـ 10؟ (اختياري) — يأخذ بركة', players:state.players, optional:true, onPick:sid=>{
-    snap(); pById(sid).cash-=10; pById(sid).blessing=(pById(sid).blessing||0)+1;
-    commit('🃏 صدقة: '+pById(sid).name+' −10 + بركة'); closeSheet(); toast('بركة ✦'); }});
+function buildDeck(){
+  const c=[], nums={1:8,2:7,3:7,4:7,5:7,6:8};
+  for(const v in nums) for(let i=0;i<nums[v];i++) c.push({t:'num',v:+v});
+  for(let i=0;i<5;i++) c.push({t:'king'});
+  for(let i=0;i<5;i++) c.push({t:'queen'});
+  ['hunger','locust','flood','plenty','sadaqah','rumor','spec','gift'].forEach(j=>c.push({t:'jack',j}));
+  return c;
 }
-function openSpec(){
-  sheet(`<div class="sh-title ar">🃏 مضاربة</div><div class="sh-sub ar">الساحب يحرّك السوق درجة في أي اتجاه</div>
-    <div class="actbtns">
-      <button class="abtn s" data-spec="up" ${state.market===2?'disabled':''}>نحو ☀️ طفرة</button>
-      <button class="abtn s" data-spec="down" ${state.market===0?'disabled':''}>نحو 🌙 كساد</button>
-    </div>`);
-  document.querySelectorAll('[data-spec]').forEach(b=>b.addEventListener('click',()=>{
-    snap(); state.market=Math.max(0,Math.min(2,state.market+(b.dataset.spec==='up'?1:-1)));
-    commit('🃏 مضاربة: السوق → '+M_AR[state.market]); closeSheet(); toast('السوق: '+M_AR[state.market]); }));
+function shuffle(a){ a=a.slice(); for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];} return a; }
+function initDeck(){ state.deck=shuffle(buildDeck()); state.discard=[]; state.current=null; }
+function cardName(c){ return c.t==='num'?('رقم '+c.v): c.t==='king'?'طفرة (ملك)': c.t==='queen'?'كساد (ملكة)': JACK[c.j].w; }
+function drawCard(){
+  if(state.current && state.current.t==='jack' && !state.current.r) return; // resolve first
+  snap();
+  if(!state.deck.length){
+    const all=state.discard.concat(state.current?[state.current]:[]);
+    state.deck=shuffle(all); state.discard=[]; state.current=null; toast('🔀 خُلط الكوت');
+  }
+  if(state.current) state.discard.push(state.current);
+  const c={...state.deck.shift(), r:true, msg:''};
+  state.current=c;
+  if(c.t==='king'){ if(state.market===2){allCash(6);c.msg='الطفرة: +6 للجميع';} else {state.market++;c.msg='السوق → '+M_AR[state.market];} }
+  else if(c.t==='queen'){ if(state.market===0){allCash(-6);c.msg='الكساد: −6 للجميع';} else {state.market--;c.msg='السوق → '+M_AR[state.market];} }
+  else if(c.t==='jack'){ const j=c.j;
+    if(j==='hunger'){state.players.forEach(p=>p.cash-=20*countType(p.id,'house'));c.msg='−20 لكل عقار';}
+    else if(j==='locust'){state.players.forEach(p=>p.cash-=6*countType(p.id,'farm'));c.msg='−6 لكل مزرعة';}
+    else if(j==='flood'){state.players.forEach(p=>p.cash-=15*countType(p.id,'souk'));c.msg='−15 لكل متجر';}
+    else if(j==='plenty'){allCash(18);c.msg='+18 للجميع';}
+    else if(j==='rumor'){ if(state.market===2){allCash(6);c.msg='إشاعة: +6 للجميع';} else if(state.market===0){allCash(-6);c.msg='إشاعة: −6 للجميع';} else c.msg='إشاعة: لا أثر (عادي)'; }
+    else { c.r=false; c.msg='اختر أدناه ↓'; }   // spec / gift / sadaqah
+  }
+  logit('🃏 '+cardName(c)); save(); render();
+  if(c.r && c.t!=='num' && c.msg) toast(c.msg);
 }
+function resolveSpec(dir){ state.market=Math.max(0,Math.min(2,state.market+(dir==='up'?1:-1)));
+  state.current.r=true; state.current.msg='السوق → '+M_AR[state.market]; save(); render(); toast('السوق: '+M_AR[state.market]); }
+function resolveGift(gid){ const others=state.players.filter(p=>p.id!==gid); others.forEach(p=>p.cash-=10); pById(gid).cash+=10*others.length;
+  state.current.r=true; state.current.msg='+'+k(10*others.length)+' لـ '+pById(gid).name; save(); render(); toast('عيدية'); }
+function resolveSadaqah(sid){ if(sid){ pById(sid).cash-=10; pById(sid).blessing=(pById(sid).blessing||0)+1; state.current.msg=pById(sid).name+' −10 ← بركة'; }
+  else state.current.msg='لم يتصدّق أحد'; state.current.r=true; save(); render(); toast(sid?'بركة ✦':'تُخطّيت'); }
 
 /* ============================ HARVEST apply ============================ */
 function applyHarvest(){
@@ -874,7 +941,7 @@ function confirmReset(){
     const ps=state.players.map(p=>({name:p.name,hex:p.hex}));
     state=freshState(); history=[];
     state.players=ps.map((d,idx)=>({id:pid(idx),name:d.name,hex:d.hex,cash:200,gold:0,blessing:0}));
-    state.started=true; logit('لعبة جديدة بنفس اللاعبين'); save(); closeSheet(); tab='players'; render();
+    state.started=true; initDeck(); logit('لعبة جديدة بنفس اللاعبين'); save(); closeSheet(); tab='players'; render();
   });
   $('#rsNo').addEventListener('click',openMenu);
 }
