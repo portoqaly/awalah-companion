@@ -160,6 +160,32 @@ body.m2{--bg:#FBF3DC;--accent:var(--gold)}
 .hv-bless{font-size:11px;font-weight:900;color:var(--gold);margin-top:4px;direction:rtl}
 .hv-warn{font-size:11px;font-weight:900;color:var(--red);margin-top:5px;direction:rtl}
 
+/* rules accordion */
+.rule{background:var(--stock);border:1px solid var(--line2);border-radius:13px;margin-bottom:8px;overflow:hidden}
+.rsum{padding:14px;font-weight:900;font-size:14.5px;direction:rtl;text-align:right;list-style:none;cursor:pointer;
+  display:flex;align-items:center;justify-content:space-between;gap:8px;min-height:50px;color:var(--ink)}
+.rsum::-webkit-details-marker{display:none}
+.rsum::after{content:'▾';color:var(--muted);font-size:12px;font-weight:700;flex:none}
+.rule[open] .rsum{border-bottom:1px solid var(--line)}
+.rule[open] .rsum::after{content:'▴'}
+.rsum:active{background:var(--paper)}
+.rbody{padding:12px 14px 14px;font-size:13px;font-weight:500;color:var(--soft);line-height:1.65;direction:rtl;text-align:right}
+.rbody b{font-weight:900;color:var(--ink)}
+.rbody ul{margin:0;padding:0;list-style:none}
+.rbody li{margin:4px 0;padding-right:14px;position:relative}
+.rbody li::before{content:'·';position:absolute;right:3px;color:var(--gold);font-weight:900}
+.rbody .step{counter-increment:st;padding-right:24px}
+.rbody .step::before{content:counter(st);position:absolute;right:0;top:0;width:18px;height:18px;border-radius:6px;
+  background:var(--ink);color:var(--stock);font-size:10px;font-weight:900;display:flex;align-items:center;justify-content:center}
+.rbody ol{counter-reset:st;margin:0;padding:0;list-style:none}
+.rtable{width:100%;border-collapse:collapse;direction:rtl;font-size:12px;font-variant-numeric:tabular-nums}
+.rtable th,.rtable td{padding:6px 3px;text-align:center;border-bottom:1px solid var(--line)}
+.rtable th{font-size:10px;color:var(--muted);font-weight:800;line-height:1.2}
+.rtable th small{font-weight:600;font-size:8px;color:var(--muted)}
+.rtable .rt-n{font-weight:900;color:var(--ink);text-align:right;white-space:nowrap}
+.rtable tbody tr:last-child td{border-bottom:none}
+.rtable .neg{color:var(--neg)}
+
 /* buttons */
 .bigbtn{width:100%;padding:15px;border-radius:14px;background:var(--ink);color:var(--stock);font-weight:900;font-size:15px;
   display:flex;align-items:center;justify-content:center;gap:8px;margin-top:6px;min-height:52px}
@@ -173,8 +199,8 @@ body.m2{--bg:#FBF3DC;--accent:var(--gold)}
 .nav{flex:none;display:flex;border-top:1px solid var(--line2);background:var(--stock);
   padding-bottom:env(safe-area-inset-bottom)}
 .navb{flex:1;padding:9px 0 8px;display:flex;flex-direction:column;align-items:center;gap:3px;color:var(--muted);font-weight:700}
-.navb .ni{font-size:19px;line-height:1}
-.navb .nl{font-size:10.5px}
+.navb .ni{font-size:18px;line-height:1}
+.navb .nl{font-size:9.5px}
 .navb.on{color:var(--red)}
 
 /* modal / sheet */
@@ -366,7 +392,7 @@ function render(){
   const app=$('#app');
   if(!state.started){ app.innerHTML=setupView(); wireSetup(); return; }
   app.innerHTML = topbar() + `<div class="content" id="content">${
-      tab==='players'?playersTab(): tab==='lands'?landsTab(): tab==='cards'?cardsTab(): harvestTab()
+      tab==='players'?playersTab(): tab==='lands'?landsTab(): tab==='cards'?cardsTab(): tab==='harvest'?harvestTab(): rulesTab()
     }</div>` + nav();
   wireMain();
 }
@@ -394,7 +420,7 @@ function topbar(){
 }
 
 function nav(){
-  const tabs=[['players','اللاعبون','👥'],['lands','الأراضي','🏘️'],['cards','البطاقات','🃏'],['harvest','الحصاد','🌾']];
+  const tabs=[['players','اللاعبون','👥'],['lands','الأراضي','🏘️'],['cards','البطاقات','🃏'],['harvest','الحصاد','🌾'],['rules','القواعد','📖']];
   return `<div class="nav">${tabs.map(([id,l,ic])=>`
     <button class="navb ${tab===id?'on':''}" data-tab="${id}"><span class="ni">${ic}</span><span class="nl">${l}</span></button>`).join('')}</div>`;
 }
@@ -505,6 +531,46 @@ function harvestTab(){
   });
   html+=`<button class="bigbtn gold" id="harvestApply">🌾 طبّق الحصاد · ابدأ الجولة ${state.round+1}</button>`;
   return html;
+}
+
+/* ---------- RULES (quick reference) ---------- */
+function rulesTab(){
+  const sgn=a=>a.map(r=>(r>0?'+':'')+r).join('/');
+  const row=(key,name)=>{const t=TYPES[key];
+    return `<tr><td class="rt-n">${name}</td><td>${t.buy.join('/')}</td>
+      <td>${t.rent.map(r=>`<span class="${r<0?'neg':''}">${r>0?'+':''}${r}</span>`).join('/')}</td>
+      <td>${t.develop}</td><td>${t.sale}</td></tr>`;};
+  const R=(q,body)=>`<details class="rule"><summary class="rsum">${q}</summary><div class="rbody ar">${body}</div></details>`;
+  let h=`<div class="sechead"><h2>القواعد</h2><span class="hint">اضغط بندًا لقراءته</span></div>`;
+  h+=R('🎯 الهدف · كيف تفوز',
+    `أول من تبلغ ثروته <b>1,000,000</b> يفوز. الثروة = الكاش + قيمة مشاريعك (بسعر «عادي»، المطوّر ×2). <b>الذهب لا يُحتسب حتى تبيعه.</b> تبدأ بـ 200k. لو ما فاز أحد بعد 30 جولة، الأغنى يفوز.`);
+  h+=R('🔄 دورك',
+    `<ol><li class="step">اسحب بطاقة وتحرّك على اللوحة.</li>
+      <li class="step">إن نزلت على مشروع لاعب آخر، ادفع له الريع (على حالة السوق الحالية؛ لو سالب لا تدفع شيئًا).</li>
+      <li class="step">إجراء بناء <b>واحد</b>: اشترِ ما نزلت عليه، أو طوّر مشروعًا على مدرّجك، أو استحوذ.</li></ol>
+      <div style="margin-top:6px">مجانًا في أي وقت: تداول الذهب، أو بِع مشروعًا للبنك.</div>`);
+  h+=R('🌙 ☀️ السوق',
+    `المؤشر يتحرّك خطوة واحدة: <b>ملك ← طفرة، ملكة ← كساد.</b> كل الأسعار والريع تتبع حالته. في الكساد كل شيء ينزف، وفي الطفرة كل شيء يزهر. (ملك وقت الطفرة: +6 للكل · ملكة وقت الكساد: −6 للكل.)`);
+  h+=R('🏘️ الأنواع الثلاثة',
+    `<table class="rtable"><thead><tr><th>النوع</th><th>شراء<br><small>كساد/عادي/طفرة</small></th><th>ريع<br><small>كساد/عادي/طفرة</small></th><th>تطوير</th><th>بيع كساد</th></tr></thead>
+      <tbody>${row('farm','مزرعة')}${row('souk','متجر')}${row('house','عقار')}</tbody></table>
+      <div style="margin-top:8px;font-size:11.5px;color:var(--muted)">السعر يرخص في الكساد ويغلى في الطفرة — الكساد فرصة شراء. المطوّر يضاعف كل الأرقام (الخسارة كذلك).</div>`);
+  h+=R('🏗️ التطوير',
+    `ادفع تكلفة التطوير → كل أرقام الريع تتضاعف (وخسارة الكساد أيضًا). <b>تطوّر فقط مشروعًا يقع على المدرّج الذي تقف عليه.</b> البناء العالي ربح كبير في الطفرة، وخطر كبير في الكساد.`);
+  h+=R('🪙 الذهب',
+    `رهان على الأزمة. السعر: طفرة 11 · عادي 14 · كساد 17 (يغلى وقت الكساد). لا يعطي ريعًا، ولا يُحتسب للفوز حتى <b>تبيعه</b>. الخدعة: احتفظ به للكساد ← بِعه غاليًا ← اشترِ برجًا رخيصًا.`);
+  h+=R('🌾 الحصاد',
+    `نهاية كل جولة، الجميع يسوّي دفعة واحدة على حالة السوق: اجمع الموجب، ادفع السالب. هذا دخلك — لا راتب ولا «مرور البداية».`);
+  h+=R('⚔️ الاستحواذ والمزاد',
+    `<b>الاستحواذ:</b> وأنت واقف على مشروع منافس، اشترِه قسرًا بـ <b>2×</b> سعره الحالي (يُدفع له، لا يقدر يرفض). <b>المزاد:</b> لو رفضت شراء ما نزلت عليه، يُعرض على الجميع ابتداءً من <b>نصف</b> السعر.`);
+  h+=R('🃏 شختك بختك — ٨ سنوات',
+    `<ul><li>سنة الجوع: −20 لكل عقار</li><li>سنة الجراد: −6 لكل مزرعة</li><li>سنة السيل: −15 لكل متجر</li>
+      <li>سنة الخير: +18 للجميع</li><li>إشاعة: طفرة +6 / كساد −6 / عادي لا شيء</li>
+      <li>صدقة: ادفع 10 → بركة (حصادك القادم يُسوّى «عادي» رغم الكساد)</li>
+      <li>مضاربة: حرّك السوق درجة في أي اتجاه</li><li>عيدية: كل لاعب آخر يعطيك 10</li></ul>`);
+  h+=R('💥 العسرة والبيع القسري',
+    `لو حصادك سالب وما عندك كاش يغطيه، لازم تبيع مشروعًا — وفي الكساد لا تأخذ إلا سعر الكساد المنخفض. هذا الفخ: من بنى عاليًا ينهار، ومن احتفظ بالكاش أو الذهب يشتري رخيصًا. <b>لا أحد يخرج من اللعبة</b> — ادفع ما تقدر والباقي يُسامَح.`);
+  return h;
 }
 
 /* ============================ SETUP ============================ */
